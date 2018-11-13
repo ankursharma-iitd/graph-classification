@@ -3,6 +3,7 @@ import numpy as np
 # import networkx.algorithms.isomorphism as iso
 import sys
 import graph_tool as gt
+import _pickle as cPickle
 
 #conversion of networkx to graph tools adopted from "https://gist.github.com/bbengfort/a430d460966d64edc6cad71c502d7005"
 def get_prop_type(value, key=None):
@@ -148,9 +149,21 @@ def parse_gaston_to_nx(filename):
 
 
 def feature_vector(graphs_file, subgraphs_file):
-    graphs = parse_gaston_to_nx(graphs_file)
-    subGraphs = parse_gaston_to_nx(subgraphs_file)
+    # graphs = parse_gaston_to_nx(graphs_file)
+    # subGraphs = parse_gaston_to_nx(subgraphs_file)
+    
+    # pickle_out = open('graphs.p', 'wb')
+    # cPickle.dump(graphs, pickle_out)
+    # cPickle.dump(subGraphs, pickle_out)
+    # pickle_out.close()
+
+    pickle_in = open('graphs.p', 'rb')
+    graphs = cPickle.load(pickle_in)
+    subGraphs = cPickle.load(pickle_in)
+    pickle_in.close()
+
     feature_vector = np.zeros((len(graphs), len(subGraphs)))
+
     for s_idx, subgraph in enumerate(subGraphs):
         for g_idx, graph in enumerate(graphs):
             gt.topology.subgraph_isomorphism(subgraph, graph, max_n=1, vertex_label=(subgraph.vertex_properties, graph.vertex_properties), edge_label=(subgraph.edge_properties, graph.edge_properties))
