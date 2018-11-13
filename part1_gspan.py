@@ -140,6 +140,7 @@ def gspan(filename):
     new_file = filename[:len(filename) - 4] + '_parsed.txt'
     num_graphs = convert_format(filename, new_file) + 1
     print('FILE PARSED GSPAN.')
+    exit()
     execution_times_gpsan = [
         timeit.timeit(
             "subprocess.run(\"python3 -m gspan_mining -s " + str(
@@ -188,6 +189,6 @@ if __name__ == '__main__':
         sys.exit(
             "Not correct arguments provided. Use %s -h for more information"
             % (sys.argv[0]))
-    # execution_times_gpsan = gspan(**kwargs)
+    execution_times_gpsan = gspan(**kwargs)
     # execution_times_fsg = fsg(**kwargs)
-    execution_times_gaston = gaston(**kwargs)
+    # execution_times_gaston = gaston(**kwargs)
