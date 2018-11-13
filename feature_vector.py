@@ -3,6 +3,7 @@ import numpy as np
 import networkx.algorithms.isomorphism as iso
 import sys
 
+
 def parse_gaston_to_nx(filename):
     Graphs = []
     with open(filename, 'r') as graph_file:

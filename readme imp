@@ -1,7 +1,7 @@
 #part 1
 pip3 install gspan-mining
 
-
+gaston
 It is also much slower than gSpan impelementations in Python.  This is likely due
       to the use of an occurrence list, which tracks all subgraphs that have been seen to 
       ensure the correctness of the algorithm.
@@ -24,10 +24,28 @@ make
 
 
 pip3 install gspan-mining
+OR
+git clone https://github.com/betterenvi/gSpan.git
+cd gSpan
+python setup.py install
+
+
 cd gaston-1.1-re/
 make
 cd ..
 
+#for graph tools on macos
+brew install graph-tool
+
+
+For Ubuntu, add the following lines to /etc/apt/sources.list
+deb http://downloads.skewed.de/apt/DISTRIBUTION DISTRIBUTION universe
+deb-src http://downloads.skewed.de/apt/DISTRIBUTION DISTRIBUTION universe
+
+After running apt-get update, the package can be installed with
+      apt-get install python3-graph-tool
+
+apt-key adv --keyserver pgp.skewed.de --recv-key 612DEFB798507F25
 
 
 

@@ -11,8 +11,6 @@ filepath = os.path.dirname(os.path.abspath(__file__))
 string_to_int = {}
 counter = 0
 
-pickle_out = open("stuff.pickle", "wb")
-
 def preprocess(input_string):
     global counter
     if input_string in string_to_int:
@@ -189,19 +187,28 @@ def convert_format_gaston(filename, new_file):
         fr.close()
     return graph_counter
 
-# thresholds = [5, 10, 25, 50, 95]
-thresholds = [90]
+thresholds = [5, 10, 25, 50, 95]
+# thresholds = [90]
 
-# Please install gspan_mining from "pip3 install gspan-mining"
+# Please install gspan_mining from "pip3 install gspan-mining" for old method
+# Otherwise run the gspan binary
 def gspan(filename):
     filename = os.path.join(filepath, filename)
     new_file = filename[:len(filename) - 4] + '_parsed_gspan.txt'
     num_graphs = convert_format_gspan(filename, new_file) + 1
     print('FILE PARSED GSPAN.')
+    # execution_times_gpsan = [
+    #     timeit.timeit(
+    #         "subprocess.run(\"python3 -m gspan_mining -s " + str(
+    #             int(float(1.0 * x * num_graphs) * 0.01)) + " " + new_file
+    #         + "\", shell=True)",
+    #         setup="import subprocess",
+    #         number=1) for x in thresholds
+    # ]
     execution_times_gpsan = [
         timeit.timeit(
-            "subprocess.run(\"python3 -m gspan_mining -s " + str(
-                int(float(1.0 * x * num_graphs) * 0.01)) + " " + new_file
+            "subprocess.run(\"./gspan-executable -s " + str(
+                int(float(1.0 * x) * 0.01)) + " -f " + new_file
             + "\", shell=True)",
             setup="import subprocess",
             number=1) for x in thresholds
@@ -257,6 +264,7 @@ if __name__ == '__main__':
         sys.exit(
             "Not correct arguments provided. Use %s -h for more information"
             % (sys.argv[0]))
+    pickle_out = open("stuff.pickle", "wb")
     execution_times_gspan = gspan(**kwargs)
     cPickle.dump(execution_times_gspan, pickle_out)
     execution_times_gaston = gaston(**kwargs)
@@ -264,4 +272,10 @@ if __name__ == '__main__':
     execution_times_fsg = fsg(**kwargs)
     cPickle.dump(execution_times_fsg, pickle_out)
     pickle_out.close()
-    plot(execution_times_gspan, execution_times_fsg, execution_times_gaston)
+
+    #load pickle
+    # pickle_in = open("stuff.pickle","rb")
+    # execution_times_gspan = cPickle.load(pickle_in)
+    # execution_times_gaston = cPickle.load(pickle_in)
+    # execution_times_fsg = cPickle.load(pickle_in)
+    # plot(execution_times_gspan, execution_times_fsg, execution_times_gaston)
