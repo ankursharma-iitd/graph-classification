@@ -11,10 +11,6 @@ def get_prop_type(value, key=None):
     If a key is provided, it also ensures the key is in a format that can be
     used with the PropertyMap. Returns a tuple, (type name, value, key)
     """
-    if isinstance(key, unicode):
-        # Encode the key as ASCII
-        key = key.encode('ascii', errors='replace')
-
     # Deal with the value
     if isinstance(value, bool):
         tname = 'bool'
@@ -26,9 +22,8 @@ def get_prop_type(value, key=None):
     elif isinstance(value, float):
         tname = 'float'
 
-    elif isinstance(value, unicode):
+    elif isinstance(value, str):
         tname = 'string'
-        value = value.encode('ascii', errors='replace')
 
     elif isinstance(value, dict):
         tname = 'object'
@@ -155,16 +150,10 @@ def parse_gaston_to_nx(filename):
 def feature_vector(graphs_file, subgraphs_file):
     graphs = parse_gaston_to_nx(graphs_file)
     subGraphs = parse_gaston_to_nx(subgraphs_file)
-    exit()
     feature_vector = np.zeros((len(graphs), len(subGraphs)))
-
     for s_idx, subgraph in enumerate(subGraphs):
         for g_idx, graph in enumerate(graphs):
-            GM = iso.GraphMatcher(
-                graph,
-                subgraph,
-                node_match=iso.categorical_node_match('label', ''),
-                edge_match=iso.categorical_edge_match('label', ''))
+            gt.topology.subgraph_isomorphism(subgraph, graph, max_n=1, vertex_label=(subgraph.vertex_properties, graph.vertex_properties), edge_label=(subgraph.edge_properties, graph.edge_properties))
             if GM.subgraph_is_isomorphic():
                 feature_vector[g_idx][s_idx] = 1.0
 
