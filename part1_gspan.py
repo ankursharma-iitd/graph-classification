@@ -5,10 +5,13 @@ import timeit
 import sys
 import subprocess
 import numpy as np
+import _pickle as cPickle
 filepath = os.path.dirname(os.path.abspath(__file__))
 
 string_to_int = {}
 counter = 0
+
+pickle_out = open("stuff.pickle", "wb")
 
 def preprocess(input_string):
     global counter
@@ -255,6 +258,10 @@ if __name__ == '__main__':
             "Not correct arguments provided. Use %s -h for more information"
             % (sys.argv[0]))
     execution_times_gspan = gspan(**kwargs)
-    execution_times_fsg = fsg(**kwargs)
+    cPickle.dump(execution_times_gspan, pickle_out)
     execution_times_gaston = gaston(**kwargs)
+    cPickle.dump(execution_times_gaston, pickle_out)
+    execution_times_fsg = fsg(**kwargs)
+    cPickle.dump(execution_times_fsg, pickle_out)
+    pickle_out.close()
     plot(execution_times_gspan, execution_times_fsg, execution_times_gaston)
